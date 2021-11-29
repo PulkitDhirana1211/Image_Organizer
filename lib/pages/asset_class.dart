@@ -38,11 +38,9 @@ class AssetThumbnail extends StatelessWidget {
           },
           child: Stack(
             children: [
-              // Wrap the image in a Positioned.fill to fill the space
               Positioned.fill(
                 child: Image.memory(bytes, fit: BoxFit.cover),
               ),
-              // Display a Play icon if the asset is a video
             ],
           ),
         );
@@ -70,6 +68,9 @@ class ImageScreen extends StatelessWidget{
             return Container();
           }
             else {
+             String paths= file.path;
+             print(paths);
+             print("Pulkit");
             return Image.file(file);
           }
         },
