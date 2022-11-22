@@ -31,7 +31,7 @@ class _MyHomePageState extends State<_MyHomePage> {
   dynamic _scanResults;
   late CameraController _camera;
   var interpreter;
-  bool cameraInit=false;
+  bool cameraInit = false;
   bool _isDetecting = false;
   CameraLensDirection _direction = CameraLensDirection.front;
   dynamic data = {};
@@ -39,11 +39,11 @@ class _MyHomePageState extends State<_MyHomePage> {
   late Directory tempDir;
   late List e1;
   bool _faceFound = false;
-  final TextEditingController _name = new TextEditingController();
+  final TextEditingController _name = TextEditingController();
 
   @override
   void initState() {
-    print('shivam init' );
+    print('shivam init');
     super.initState();
     print('shivam');
     SystemChrome.setPreferredOrientations(
@@ -71,7 +71,6 @@ class _MyHomePageState extends State<_MyHomePage> {
   }
 
   void _initializeCamera() async {
-
     await loadModel();
     print('gupta');
     CameraDescription description = await getCamera(_direction);
@@ -87,7 +86,7 @@ class _MyHomePageState extends State<_MyHomePage> {
     await Future.delayed(Duration(milliseconds: 500));
     tempDir = await getApplicationDocumentsDirectory();
     String _embPath = tempDir.path + '/emb.json';
-    jsonFile = new File(_embPath);
+    jsonFile = File(_embPath);
     if (jsonFile.existsSync()) data = json.decode(jsonFile.readAsStringSync());
     print('shivam camera2');
     _camera.startImageStream((CameraImage image) {
@@ -97,14 +96,14 @@ class _MyHomePageState extends State<_MyHomePage> {
         String res;
         dynamic finalResult = Multimap<String, Face>();
         detect(image, _getDetectionMethod(), rotation).then(
-              (dynamic result) async {
+          (dynamic result) async {
             if (result.length == 0)
               _faceFound = false;
             else
               _faceFound = true;
             Face _face;
             imglib.Image convertedImage =
-            _convertCameraImage(image, _direction);
+                _convertCameraImage(image, _direction);
             for (_face in result) {
               double x, y, w, h;
               x = (_face.boundingBox.left - 10);
@@ -127,14 +126,14 @@ class _MyHomePageState extends State<_MyHomePage> {
             _isDetecting = false;
           },
         ).catchError(
-              (_) {
+          (_) {
             _isDetecting = false;
           },
         );
       }
     });
     print('shivam camerarthyy');
-    cameraInit=true;
+    cameraInit = true;
   }
 
   HandleDetection _getDetectionMethod() {
@@ -169,7 +168,6 @@ class _MyHomePageState extends State<_MyHomePage> {
     print('shivam build image');
 
     if (!cameraInit) {
-
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -180,12 +178,12 @@ class _MyHomePageState extends State<_MyHomePage> {
       child: _camera == null
           ? const Center(child: null)
           : Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          CameraPreview(_camera),
-          _buildResults(),
-        ],
-      ),
+              fit: StackFit.expand,
+              children: <Widget>[
+                CameraPreview(_camera),
+                _buildResults(),
+              ],
+            ),
     );
   }
 
@@ -233,7 +231,7 @@ class _MyHomePageState extends State<_MyHomePage> {
       ),
       body: _buildImage(),
       floatingActionButton:
-      Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Column(mainAxisAlignment: MainAxisAlignment.end, children: [
         FloatingActionButton(
           backgroundColor: (_faceFound) ? Colors.blue : Colors.blueGrey,
           child: Icon(Icons.add),
@@ -267,8 +265,8 @@ class _MyHomePageState extends State<_MyHomePage> {
     final int? uvPixelStride = image.planes[1].bytesPerPixel;
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        final int uvIndex =
-            uvPixelStride! * (x / 2).floor() + uvyButtonStride * (y / 2).floor();
+        final int uvIndex = uvPixelStride! * (x / 2).floor() +
+            uvyButtonStride * (y / 2).floor();
         final int index = y * width + x;
         final yp = image.planes[0].bytes[index];
         final up = image.planes[1].bytes[uvIndex];
@@ -326,33 +324,33 @@ class _MyHomePageState extends State<_MyHomePage> {
       _camera = null;
     });*/
     String name;
-    var alert = new AlertDialog(
-      title: new Text("Saved Faces"),
-      content: new ListView.builder(
-          padding: new EdgeInsets.all(2),
+    var alert = AlertDialog(
+      title: Text("Saved Faces"),
+      content: ListView.builder(
+          padding: EdgeInsets.all(2),
           itemCount: data.length,
           itemBuilder: (BuildContext context, int index) {
             name = data.keys.elementAt(index);
-            return new Column(
+            return Column(
               children: <Widget>[
-                new ListTile(
-                  title: new Text(
+                ListTile(
+                  title: Text(
                     name,
-                    style: new TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[400],
                     ),
                   ),
                 ),
-                new Padding(
+                Padding(
                   padding: EdgeInsets.all(2),
                 ),
-                new Divider(),
+                Divider(),
               ],
             );
           }),
       actions: <Widget>[
-        new FlatButton(
+        ElevatedButton(
           child: Text("OK"),
           onPressed: () {
             _initializeCamera();
@@ -373,29 +371,29 @@ class _MyHomePageState extends State<_MyHomePage> {
       _camera = null;
     });*/
     print("Adding new face");
-    var alert = new AlertDialog(
-      title: new Text("Add Face"),
-      content: new Row(
+    var alert = AlertDialog(
+      title: Text("Add Face"),
+      content: Row(
         children: <Widget>[
-          new Expanded(
-            child: new TextField(
+          Expanded(
+            child: TextField(
               controller: _name,
               autofocus: true,
-              decoration: new InputDecoration(
-                  labelText: "Name", icon: new Icon(Icons.face)),
+              decoration:
+                  InputDecoration(labelText: "Name", icon: Icon(Icons.face)),
             ),
           )
         ],
       ),
       actions: <Widget>[
-        new FlatButton(
+        ElevatedButton(
             child: Text("Save"),
             onPressed: () {
               _handle(_name.text.toUpperCase());
               _name.clear();
               Navigator.pop(context);
             }),
-        new FlatButton(
+        ElevatedButton(
           child: Text("Cancel"),
           onPressed: () {
             _initializeCamera();
