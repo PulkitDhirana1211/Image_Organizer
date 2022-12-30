@@ -23,8 +23,8 @@ class _ImageorganizerState extends State<Imageorganizer> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: ()async{
-    final permitted = await PhotoManager.requestPermission();
-    if (!permitted) return;
+    final permitted = await PhotoManager.requestPermissionExtend();
+    if (!permitted.isAuth) return;
      Navigator.of(context).push(
     MaterialPageRoute(builder: (_) => Gallery()),
    );
