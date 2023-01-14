@@ -1,20 +1,19 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
-import 'dart:async' show Future; import 'package:flutter/services.dart'
-    show rootBundle;
+import 'dart:async' show Future;
+
 class StaticImage extends StatefulWidget {
   @override
   _StaticImageState createState() => _StaticImageState();
 }
 
 class _StaticImageState extends State<StaticImage> {
-  List<File> _image=[] ;
-  List _recognitions=[];
-  bool _busy=true;
-  double _imageWidth=100, _imageHeight=100;
+  final List<File> _image = [];
+  List _recognitions = [];
+  bool _busy = true;
+  double _imageWidth = 100, _imageHeight = 100;
 
   final picker = ImagePicker();
 
@@ -38,7 +37,7 @@ class _StaticImageState extends State<StaticImage> {
         asynch: true // defaults to true
         );
     FileImage(image)
-        .resolve(ImageConfiguration())
+        .resolve(const ImageConfiguration())
         .addListener((ImageStreamListener((ImageInfo info, bool _) {
           setState(() {
             _imageWidth = info.image.width.toDouble();
@@ -66,7 +65,7 @@ class _StaticImageState extends State<StaticImage> {
   // display the bounding boxes over the detected objects
   List<Widget> renderBoxes(Size screen) {
     if (_recognitions == null) return [];
-    if (_imageWidth == null || _imageHeight == null) return [];
+    if (_imageHeight == null) return [];
 
     double factorX = screen.width;
     double factorY = _imageHeight / _imageHeight * screen.width;
@@ -109,12 +108,12 @@ class _StaticImageState extends State<StaticImage> {
 
     stackChildren.add(Positioned(
       // using ternary operator
-      child: _image.length==0
+      child: _image.isEmpty
           ? Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text("Please Select an Image"),
+                children: const <Widget>[
+                  Text("Please select an Image for Object detection"),
                 ],
               ),
             )
@@ -125,29 +124,29 @@ class _StaticImageState extends State<StaticImage> {
     stackChildren.addAll(renderBoxes(size));
 
     if (_busy) {
-      stackChildren.add(Center(
+      stackChildren.add(const Center(
         child: CircularProgressIndicator(),
       ));
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Object Detector"),
+        title: const Text("Object Detector"),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           FloatingActionButton(
             heroTag: "Fltbtn2",
-            child: Icon(Icons.camera_alt),
+            child: const Icon(Icons.camera_alt),
             onPressed: getImageFromCamera,
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           FloatingActionButton(
             heroTag: "Fltbtn1",
-            child: Icon(Icons.photo),
+            child: const Icon(Icons.photo),
             onPressed: getImageFromGallery,
           ),
         ],
@@ -168,8 +167,7 @@ class _StaticImageState extends State<StaticImage> {
     setState(() {
       if (pickedFile != null) {
         _image.clear();
-        _image.add( File(pickedFile.path));
-
+        _image.add(File(pickedFile.path));
       } else {
         print("No image Selected");
       }
@@ -183,7 +181,7 @@ class _StaticImageState extends State<StaticImage> {
     setState(() {
       if (pickedFile != null) {
         _image.clear();
-        _image.add( File(pickedFile.path));
+        _image.add(File(pickedFile.path));
       } else {
         print("No image Selected");
       }

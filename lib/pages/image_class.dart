@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'gallery.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // ignore_for_file: prefer_const_constructors
 class Imageorganizer extends StatefulWidget {
@@ -16,19 +15,22 @@ class _ImageorganizerState extends State<Imageorganizer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-            child: Text("Image Organizer")
-        ),
+        title: Center(child: Text("Image Compression")),
       ),
+      body: Center(
+          child: Text(
+        "Please select an image for compression",
+        style: TextStyle(fontSize: 20),
+      )),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: ()async{
-    final permitted = await PhotoManager.requestPermissionExtend();
-    if (!permitted.isAuth) return;
-     Navigator.of(context).push(
-    MaterialPageRoute(builder: (_) => Gallery()),
-   );
-    },
+        onPressed: () async {
+          final permitted = await PhotoManager.requestPermissionExtend();
+          if (!permitted.isAuth) return;
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => Gallery()),
+          );
+        },
       ),
     );
   }

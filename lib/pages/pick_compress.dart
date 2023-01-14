@@ -26,40 +26,43 @@ class _CompressState extends State<Compress> {
     final splitted = filePath.substring(0, (lastIndex));
     final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
     var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path, outPath,
+      file.absolute.path,
+      outPath,
       quality: 70,
     );
     print(file.lengthSync());
     print(result!.lengthSync());
     return result;
   }
-  pickImage() async {
 
-      final image = await picker.pickImage(source: ImageSource.gallery);
-      if (image == null) {
-        return;
-      }
-      final temp = File(image.path);
-      final size = temp.lengthSync() / 1024;
+  pickImage() async {
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image == null) {
+      return;
+    }
+    final temp = File(image.path);
+    final size = temp.lengthSync() / 1024;
 //      print("Before $size");
-      File Compressed=await compressFile(temp);
+    File Compressed = await compressFile(temp);
     String path = Compressed.path;
     _saveNetworkImage(path);
-    final sizeinkb=Compressed.lengthSync()/1024;
-      print("After $sizeinkb");
- print(Compressed.absolute.path);
-      setState(() {
-        this.image = temp;
-        fileImage=Compressed;
-      });
+    final sizeinkb = Compressed.lengthSync() / 1024;
+    print("After $sizeinkb");
+    print(Compressed.absolute.path);
+    setState(() {
+      this.image = temp;
+      fileImage = Compressed;
+    });
   }
+
   void _saveNetworkImage(String paths) async {
     GallerySaver.saveImage(paths).then((bool? success) {
       setState(() {
         print('Image is saved');
       });
     });
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Image has been saved. Check in your gallery")));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Image has been saved. Check in your gallery")));
   }
 
   @override
@@ -70,23 +73,21 @@ class _CompressState extends State<Compress> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            fileImage!=null?
-            Center(
-              child: Image.file(
-                fileImage!,
-              ),
-            )
-                :Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Center(
-                  child: Text("Pick Image First")
-              ),
-            )
+            fileImage != null
+                ? Center(
+                    child: Image.file(
+                      fileImage!,
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Center(child: Text("Pick Image First")),
+                  )
           ],
         ),
       ),
       floatingActionButton: ElevatedButton(
-        onPressed: () async{
+        onPressed: () async {
           pickImage();
         },
         child: Text(
